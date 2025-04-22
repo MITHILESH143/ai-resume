@@ -1,85 +1,123 @@
-import React from 'react';
+"use client"
 
-const ResumePage = () => {
-  const resumeData = {
-    name: "John Doe",
-    title: "Full Stack Developer",
-    email: "john.doe@example.com",
-    phone: "+91 98765 43210",
-    location: "Pune, India",
-    summary: "Innovative full stack developer with 4+ years of experience building scalable web apps. Passionate about clean code and intuitive UX.",
-    skills: ["React.js", "Node.js", "MongoDB", "Tailwind CSS", "REST APIs", "Git"],
-    experience: [
-      {
-        role: "Senior Developer",
-        company: "TechNova Solutions",
-        duration: "Jan 2022 – Present",
-        description: "Led frontend development for multiple B2B SaaS platforms using React and Node."
-      },
-      {
-        role: "Junior Developer",
-        company: "WebCraft",
-        duration: "Jun 2020 – Dec 2021",
-        description: "Developed REST APIs and admin dashboards, improving system efficiency by 30%."
-      }
-    ],
-    education: [
-      {
-        degree: "B.E. in Computer Engineering",
-        institute: "MIT Pune",
-        year: "2016 – 2020"
-      }
-    ]
+
+import { useState } from "react";
+
+export default function ResumeBuilder() {
+  const [form, setForm] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    summary: "",
+    skills: "",
+  });
+
+  const [education, setEducation] = useState([{ school: "", degree: "", year: "" }]);
+  const [experience, setExperience] = useState([{ company: "", role: "", duration: "" }]);
+
+  const handleFormChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleEducationChange = (index, e) => {
+    const updated = [...education];
+    updated[index][e.target.name] = e.target.value;
+    setEducation(updated);
+  };
+
+  const handleExperienceChange = (index, e) => {
+    const updated = [...experience];
+    updated[index][e.target.name] = e.target.value;
+    setExperience(updated);
+  };
+
+  const addEducation = () => setEducation([...education, { school: "", degree: "", year: "" }]);
+  const addExperience = () => setExperience([...experience, { company: "", role: "", duration: "" }]);
+
+  const removeEducation = (index) => setEducation(education.filter((_, i) => i !== index));
+  const removeExperience = (index) => setExperience(experience.filter((_, i) => i !== index));
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fullResume = { ...form, education, experience };
+    console.log("Resume Data:", fullResume);
+    // Save to backend or send to AI API here
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-2xl mt-10">
-      <h1 className="text-3xl font-bold text-center">{resumeData.name}</h1>
-      <p className="text-center text-gray-600">{resumeData.title}</p>
-      <div className="flex justify-center gap-6 mt-2 text-sm text-gray-700">
-        <span>{resumeData.email}</span>
-        <span>{resumeData.phone}</span>
-        <span>{resumeData.location}</span>
-      </div>
+    <>
+    
+      <div className="min-h-screen bg-gray-100 p-6">
+        <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow-md">
+          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Resume Builder</h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
 
-      <section className="mt-8">
-        <h2 className="text-xl font-semibold border-b pb-1 mb-2">Professional Summary</h2>
-        <p className="text-gray-800">{resumeData.summary}</p>
-      </section>
+            {/* Basic Info */}
+            <div>
+              <label className="block font-medium">Full Name</label>
+              <input name="fullName" onChange={handleFormChange} className="w-full border rounded px-3 py-2" required />
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label>Email</label>
+                <input name="email" type="email" onChange={handleFormChange} className="w-full border rounded px-3 py-2" />
+              </div>
+              <div>
+                <label>Phone</label>
+                <input name="phone" onChange={handleFormChange} className="w-full border rounded px-3 py-2" />
+              </div>
+            </div>
 
-      <section className="mt-6">
-        <h2 className="text-xl font-semibold border-b pb-1 mb-2">Skills</h2>
-        <div className="flex flex-wrap gap-3">
-          {resumeData.skills.map((skill, index) => (
-            <span key={index} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-              {skill}
-            </span>
-          ))}
+            {/* Summary */}
+            <div>
+              <label>Professional Summary</label>
+              <textarea name="summary" onChange={handleFormChange} rows={3} className="w-full border rounded px-3 py-2" />
+            </div>
+
+            {/* Education Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Education</h3>
+              {education.map((item, index) => (
+                <div key={index} className="grid md:grid-cols-3 gap-4 mb-3">
+                  <input name="school" placeholder="School" value={item.school} onChange={(e) => handleEducationChange(index, e)} className="border px-3 py-2 rounded" />
+                  <input name="degree" placeholder="Degree" value={item.degree} onChange={(e) => handleEducationChange(index, e)} className="border px-3 py-2 rounded" />
+                  <input name="year" placeholder="Year" value={item.year} onChange={(e) => handleEducationChange(index, e)} className="border px-3 py-2 rounded" />
+                  {education.length > 1 && (
+                    <button type="button" onClick={() => removeEducation(index)} className="text-red-500">Remove</button>
+                  )}
+                </div>
+              ))}
+              <button type="button" onClick={addEducation} className="text-blue-600">+ Add Education</button>
+            </div>
+
+            {/* Experience Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Experience</h3>
+              {experience.map((item, index) => (
+                <div key={index} className="grid md:grid-cols-3 gap-4 mb-3">
+                  <input name="company" placeholder="Company" value={item.company} onChange={(e) => handleExperienceChange(index, e)} className="border px-3 py-2 rounded" />
+                  <input name="role" placeholder="Role" value={item.role} onChange={(e) => handleExperienceChange(index, e)} className="border px-3 py-2 rounded" />
+                  <input name="duration" placeholder="Duration" value={item.duration} onChange={(e) => handleExperienceChange(index, e)} className="border px-3 py-2 rounded" />
+                  {experience.length > 1 && (
+                    <button type="button" onClick={() => removeExperience(index)} className="text-red-500">Remove</button>
+                  )}
+                </div>
+              ))}
+              <button type="button" onClick={addExperience} className="text-blue-600">+ Add Experience</button>
+            </div>
+
+            {/* Skills */}
+            <div>
+              <label>Skills (comma separated)</label>
+              <input name="skills" onChange={handleFormChange} className="w-full border rounded px-3 py-2" />
+            </div>
+
+            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">
+              Save Resume
+            </button>
+          </form>
         </div>
-      </section>
-
-      <section className="mt-6">
-        <h2 className="text-xl font-semibold border-b pb-1 mb-2">Experience</h2>
-        {resumeData.experience.map((exp, index) => (
-          <div key={index} className="mb-4">
-            <p className="font-semibold">{exp.role} – {exp.company}</p>
-            <p className="text-sm text-gray-500">{exp.duration}</p>
-            <p className="text-gray-800">{exp.description}</p>
-          </div>
-        ))}
-      </section>
-
-      <section className="mt-6">
-        <h2 className="text-xl font-semibold border-b pb-1 mb-2">Education</h2>
-        {resumeData.education.map((edu, index) => (
-          <div key={index}>
-            <p className="font-semibold">{edu.degree}</p>
-            <p className="text-sm text-gray-500">{edu.institute} | {edu.year}</p>
-          </div>
-        ))}
-      </section>
-    </div>
+      </div>
+    </>
   );
-};
-
-export default ResumePage;
+}
