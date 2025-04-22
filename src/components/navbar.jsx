@@ -34,8 +34,7 @@ const Navbar = () => {
           <Link href="/" className="hover:text-blue-400">Dashboard</Link>
           <Link href="/resume" className="hover:text-blue-400">Resume</Link>
           <Link href="/interview" className="hover:text-blue-400">Interview</Link>
-          <Link href="/login" className="hover:text-blue-400">Login</Link>
-          <Link href="/register" className="hover:text-blue-400">Register</Link>
+        
         </div>
       </div>
 
@@ -45,8 +44,7 @@ const Navbar = () => {
           <Link href="/" className="hover:text-blue-400">Dashboard</Link>
           <Link href="/resume" className="hover:text-blue-400">Resume</Link>
           <Link href="/interview" className="hover:text-blue-400">Interview</Link>
-          <Link href="/login" className="hover:text-blue-400">Login</Link>
-          <Link href="/register" className="hover:text-blue-400">Register</Link>
+         
         </div>
       )}
     </nav>
