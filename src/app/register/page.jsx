@@ -56,7 +56,7 @@ const Register = () => {
             name="username"
             onChange={handleChange}
             value={formData.username}
-            className="w-full px-4 py-2 border rounded-md"
+            className="w-full px-4 py-2 border rounded-md text-blue-800"
             required
           />
         </div>
@@ -67,7 +67,7 @@ const Register = () => {
             name="email"
             onChange={handleChange}
             value={formData.email}
-            className="w-full px-4 py-2 border rounded-md"
+            className="w-full px-4 py-2 border rounded-md text-blue-800"
             required
           />
         </div>
@@ -78,7 +78,7 @@ const Register = () => {
             name="password"
             onChange={handleChange}
             value={formData.password}
-            className="w-full px-4 py-2 border rounded-md"
+            className="w-full px-4 py-2 border rounded-md text-blue-800"
             required
           />
         </div>
