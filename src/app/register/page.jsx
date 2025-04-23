@@ -1,59 +1,97 @@
+"use client";
+import { useState } from "react";
 
+const Register = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: ""
+  });
+  const [message, setMessage] = useState("");
 
-export default function Register() {
+  const handleChange = (e) => {
+
+    
+    
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage("Registration successful!");
+        setFormData({ username: "", email: "", password: "" });
+      } else {
+        setMessage(data.message || "Registration failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setMessage("Something went wrong.", error.message);
+    }
+  };
+
   return (
-    <>
-      
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-        <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Create an Account</h2>
-          <form className="space-y-5">
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">Full Name</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your name"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">Email</label>
-              <input
-                type="email"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">Password</label>
-              <input
-                type="password"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Create a password"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition duration-200"
-            >
-              Register
-            </button>
-
-            <p className="text-sm text-center text-gray-600 mt-4">
-              Already have an account?{" "}
-              <a href="/login" className="text-blue-500 hover:underline">
-                Login here
-              </a>
-            </p>
-          </form>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
+      <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block font-semibold">Name</label>
+          <input
+            type="text"
+            name="username"
+            onChange={handleChange}
+            value={formData.username}
+            className="w-full px-4 py-2 border rounded-md"
+            required
+          />
         </div>
-      </div>
-    </>
+        <div>
+          <label className="block font-semibold">Email</label>
+          <input
+            type="email"
+            name="email"
+            onChange={handleChange}
+            value={formData.email}
+            className="w-full px-4 py-2 border rounded-md"
+            required
+          />
+        </div>
+        <div>
+          <label className="block font-semibold">Password</label>
+          <input
+            type="password"
+            name="password"
+            onChange={handleChange}
+            value={formData.password}
+            className="w-full px-4 py-2 border rounded-md"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+        >
+          Register
+        </button>
+        {message && <p className="mt-4 text-center text-sm text-red-500">{message}</p>}
+      </form>
+    </div>
   );
-}
+};
+
+export default Register;
