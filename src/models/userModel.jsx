@@ -7,6 +7,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Fix: Only create model if it doesn't already exist
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+const User = mongoose.models.Users || mongoose.model('Users', userSchema);
 
 export default User;
