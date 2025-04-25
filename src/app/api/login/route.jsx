@@ -1,11 +1,15 @@
 import connectToDatabase from '@/dbConfig/dbConnection';
 import User from '@/models/userModel';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcrypt';
 
 connectToDatabase();
 
 export async function POST(request) {
   try {
+
+    
+
     const { email, password } = await request.json();
 
     if (!email || !password) {
@@ -17,8 +21,10 @@ export async function POST(request) {
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
+    const ismatch = await bcrypt.compare(password, user.password);
+    
 
-    if (user.password !== password) {
+    if (!ismatch) { 
       return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
     }
 
