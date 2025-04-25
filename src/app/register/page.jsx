@@ -1,5 +1,10 @@
 "use client";
+
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
+import Link from "next/link";
+
+
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -8,11 +13,10 @@ const Register = () => {
     password: ""
   });
   const [message, setMessage] = useState("");
+const router = useRouter(); // Initialize useRouter
+  
 
   const handleChange = (e) => {
-
-    
-    
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -34,14 +38,25 @@ const Register = () => {
       const data = await res.json();
 
       if (res.ok) {
+        // Successful registration
         setMessage("Registration successful!");
-        setFormData({ username: "", email: "", password: "" });
+
+        setFormData({
+          username: "",
+          email: "",
+          password: ""
+        });
+        setTimeout(() => {
+          router.push("/login"); // Redirect after 2 seconds
+        }, 1000);
       } else {
+        // Handle registration failure
         setMessage(data.message || "Registration failed.");
       }
     } catch (error) {
+      // Catch and log errors
       console.error("Error:", error);
-      setMessage("Something went wrong.", error.message);
+      setMessage("Something went wrong.");
     }
   };
 
@@ -65,11 +80,10 @@ const Register = () => {
           <input
             type="email"
             name="email"
+            className="w-full px-4 py-2 border rounded-md text-blue-800"
             onChange={handleChange}
             value={formData.email}
-            className="w-full px-4 py-2 border rounded-md text-blue-800"
-            required
-          />
+            required />
         </div>
         <div>
           <label className="block font-semibold">Password</label>
@@ -89,6 +103,9 @@ const Register = () => {
           Register
         </button>
         {message && <p className="mt-4 text-center text-sm text-red-500">{message}</p>}
+        <p className="mt-4 text-center text-sm text-black-500">If Already have a Account {" "}<Link href="/login" className="text-blue-500 hover:underline">
+                    Login
+         </Link></p>
       </form>
     </div>
   );
